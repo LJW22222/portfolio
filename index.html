@@ -93,7 +93,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
     <p class="eyebrow">백엔드 개발자 포트폴리오</p>
     <h1>이종원</h1>
     <p class="lead">문제를 지표로 찾고, 원인을 확정한 뒤 구조로 고치는 백엔드 개발자</p>
-    <p class="intro">2026.03부터 서비스 A(레슨 녹음 AI 피드백 <span class="nb">앱)의</span> 백엔드와 AI 파이프라인, 서비스 B(무인 매장 결제 플랫폼, 입사 전부터 운영되던 <span class="nb">서비스)의</span> 백엔드를 혼자 맡고 있음</p>
+    <p class="intro">2026.03부터 레슨앱의 백엔드와 AI 파이프라인, 입사 전부터 운영되던 무인매장 플랫폼의 백엔드를 혼자 맡고 있음</p>
     <p class="links">
       <a href="https://github.com/LJW22222">GitHub</a>
       <a href="https://ljwstudy.tistory.com/">기술 블로그</a>
@@ -112,9 +112,9 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
 
   <section class="case" id="case-notification">
     <h2>알림 묵음 누락 해결 및 트랜잭션 경계 재설계</h2>
-    <p class="case-meta">2026.07 | 서비스 A(레슨 녹음 AI 피드백 앱) | Spring Boot, JPA, MySQL, 트랜잭션 이벤트, 부하 테스트</p>
+    <p class="case-meta">2026.07 | 레슨앱 | Spring Boot, JPA, MySQL, 트랜잭션 이벤트, 부하 테스트</p>
     <h3>배경</h3>
-    <p>서비스 A는 레슨이 끝나면 AI 분석 카드를 만들고 사용자에게 알림을 보냄. 출시 전 부하 감사에서 HTTP 에러는 0%였지만 알림 레코드 일부가 사라짐. 목표는 같은 부하에서 알림 누락 0건.</p>
+    <p>레슨앱은 레슨이 끝나면 AI 분석 카드를 만들고 사용자에게 알림을 보냄. 출시 전 부하 감사에서 HTTP 에러는 0%였지만 알림 레코드 일부가 사라짐. 목표는 같은 부하에서 알림 누락 0건.</p>
     <h3>과제</h3>
     <p>알림 레코드 8.7%(323/3,719)가 애플리케이션 예외 없이 누락되고 복구 경로도 없었음. HTTP 지표로는 보이지 않아 어디서 빠지는지부터 찾아야 했음.</p>
     <h3>행동</h3>
@@ -179,9 +179,9 @@ public void handle(CardCreatedEvent event) {
 
   <section class="case" id="case-payment">
     <h2>결제 이중 처리 락 경합 해결 및 웹훅 단일 Writer 재설계</h2>
-    <p class="case-meta">2026.04 ~ 2026.06 | 서비스 B(무인 매장 결제 플랫폼, 입사 전부터 운영되던 서비스) | Spring, MyBatis, Redis SET NX 락, PG 웹훅</p>
+    <p class="case-meta">2026.04 ~ 2026.06 | 입사 전부터 운영되던 무인매장 플랫폼 | Spring, MyBatis, Redis SET NX 락, PG 웹훅</p>
     <h3>배경</h3>
-    <p>서비스 B는 주문 누락 CS를 막으려고 결제 콜백과 웹훅을 모두 저장 경로로 두고, Redis 락으로 중복 처리를 막고 있었음. 목표는 결제가 정상이면 사용자도 정상 화면을 보게 하는 것.</p>
+    <p>무인매장 플랫폼은 주문 누락 CS를 막으려고 결제 콜백과 웹훅을 모두 저장 경로로 두고, Redis 락으로 중복 처리를 막고 있었음. 목표는 결제가 정상이면 사용자도 정상 화면을 보게 하는 것.</p>
     <h3>과제</h3>
     <p>PG에서는 결제가 정상 처리됐는데도 3일간 결제 콜백의 61.8%(<span class="nb">218/353)가</span> 락 경합으로 에러 화면을 받아 재결제가 생김. 예외 로그는 0건이라 원인이 보이지 않았음.</p>
     <h3>행동</h3>
@@ -239,7 +239,7 @@ public void handle(CardCreatedEvent event) {
 
   <section class="case" id="case-hybrid-stt">
     <h2>Mac mini와 AWS SQS를 활용한 하이브리드 STT 파이프라인 구축</h2>
-    <p class="case-meta">2026.07 ~ 2026.09 | 서비스 A | AWS Lambda, SQS, Transcribe, whisper.cpp, Mac mini</p>
+    <p class="case-meta">2026.07 ~ 2026.09 | 레슨앱 | AWS Lambda, SQS, Transcribe, whisper.cpp, Mac mini</p>
     <h3>배경</h3>
     <p>건별 비용을 관측해 보니(2026.05~06, 60초 이상 녹음 100건) AI 분석 원가의 약 80%가 클라우드 STT 비용이었음. 비용은 줄이되 60분 녹음을 10분 안에 처리한다는 목표는 지켜야 했음.</p>
     <h3>과제</h3>
@@ -296,7 +296,7 @@ public void handle(CardCreatedEvent event) {
 
   <section class="case" id="case-stt-accuracy">
     <h2>STT 인식 오류율 개선 및 정답지 기반 평가 체계 구축</h2>
-    <p class="case-meta">2026.07 ~ 2026.09 | 서비스 A | whisper.cpp, Python, CER, WER 채점</p>
+    <p class="case-meta">2026.07 ~ 2026.09 | 레슨앱 | whisper.cpp, Python, CER, WER 채점</p>
     <h3>배경</h3>
     <p>레슨 녹음에는 소음과 음악이 섞여 클라우드 STT 오류율이 높았고, 품질을 잴 기준도 없었음. 목표는 개선 여부를 숫자로 판정하는 평가 체계를 만들고 그 기준으로 오류율을 낮추는 것.</p>
     <h3>과제</h3>
