@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이종원 백엔드 포트폴리오</title>
+<meta name="description" content="문제를 지표로 찾고, 원인을 확정한 뒤 구조로 고치는 백엔드 개발자 이종원의 포트폴리오">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root { --ink: #121212; --muted: #555555; --line: #d9d9d9; --accent: #1f3a5f; --soft: #f4f6f9; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #ffffff; color: var(--ink); font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+main { max-width: 860px; margin: 0 auto; padding: 48px 20px 80px; }
+h1, h2, h3 { color: var(--accent); line-height: 1.35; margin: 0; }
+h1 { font-size: 40px; letter-spacing: -0.02em; }
+h2 { font-size: 24px; }
+h3 { font-size: 17px; margin-top: 20px; }
+p { margin: 8px 0 0; }
+a { color: var(--accent); }
+.eyebrow { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: var(--accent); }
+.lead { margin-top: 10px; font-size: 19px; font-weight: 600; }
+.intro { margin-top: 8px; font-size: 15px; color: var(--muted); }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 14px; font-size: 15px; }
+.btn { display: inline-block; padding: 6px 14px; border: 1px solid var(--accent); border-radius: 6px; text-decoration: none; font-weight: 600; }
+.cover-title { margin-top: 40px; padding-bottom: 10px; border-bottom: 2px solid var(--accent); font-size: 15px; }
+.metric { display: grid; grid-template-columns: 240px 1fr; column-gap: 24px; row-gap: 2px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.metric b { grid-row: 1 / span 2; font-size: 26px; line-height: 1.25; letter-spacing: -0.01em; color: var(--accent); }
+.metric a { grid-column: 2; font-size: 16px; font-weight: 700; color: var(--ink); text-decoration: none; }
+.metric a i { font-style: normal; color: var(--accent); margin-right: 10px; }
+.metric span { grid-column: 2; font-size: 13.5px; color: var(--muted); }
+.stack { margin-top: 22px; font-size: 14px; color: var(--muted); }
+.stack b { color: var(--accent); margin-right: 10px; }
+section { margin-top: 56px; }
+.case-meta { margin-top: 6px; font-size: 14px; color: var(--muted); }
+ul { margin: 8px 0 0; padding-left: 20px; }
+li + li { margin-top: 4px; }
+figure { margin: 16px 0 0; }
+.figure-scroll { overflow-x: auto; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; overflow-wrap: normal; }
+th { color: var(--accent); }
+pre { background: var(--soft); border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-family: ui-monospace, Consolas, "Courier New", monospace; font-size: 13px; line-height: 1.5; }
+pre code { font-family: inherit; }
+.nb { white-space: nowrap; }
+.code-note { font-size: 13px; color: var(--muted); }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.d-title { font: 700 16px "Pretendard", sans-serif; fill: var(--accent); }
+.d-box { fill: #ffffff; stroke: var(--accent); stroke-width: 1.5; }
+.d-box-accent { fill: #eef2f7; stroke: var(--accent); stroke-width: 2; }
+.d-box-muted { fill: #f4f4f4; stroke: #8a8a8a; stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-text { font: 14px "Pretendard", sans-serif; fill: var(--ink); }
+.d-small { font: 13px "Pretendard", sans-serif; fill: var(--muted); }
+.d-line { stroke: var(--ink); stroke-width: 1.5; }
+.d-head { fill: var(--ink); }
+@media (max-width: 600px) {
+  main { padding: 32px 16px 64px; }
+  h1 { font-size: 30px; }
+  .metric { grid-template-columns: 1fr; }
+  .metric b { grid-row: auto; font-size: 22px; }
+  .metric a, .metric span { grid-column: auto; }
+  .figure-scroll svg { min-width: 640px; }
+}
+@page { size: A4; margin: 16mm 14mm; }
+@media print {
+  body { font-size: 10.5pt; line-height: 1.5; }
+  main { max-width: none; padding: 0; }
+  .web-only { display: none !important; }
+  section { margin-top: 0; }
+  .case, #how { break-before: page; }
+  figure, table, .metric, pre { break-inside: avoid; }
+  .cover { padding-top: 26mm; }
+  .cover-title { margin-top: 20mm; }
+  .metric { padding: 14pt 0; }
+  .stack { margin-top: 16mm; }
+  h2, h3 { break-after: avoid; }
+  h3 { margin-top: 12px; }
+  li + li { margin-top: 2px; }
+  figure { margin-top: 10px; }
+  figure svg { width: 84%; margin: 0 auto; }
+  figcaption { text-align: center; }
+  table { font-size: 9.5pt; }
+  th, td { padding: 4px 8px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header id="top" class="cover">
+    <p class="eyebrow">백엔드 개발자 포트폴리오</p>
+    <h1>이종원</h1>
+    <p class="lead">문제를 지표로 찾고, 원인을 확정한 뒤 구조로 고치는 백엔드 개발자</p>
+    <p class="intro">2026.03부터 서비스 A(레슨 녹음 AI 피드백 <span class="nb">앱)의</span> 백엔드와 AI 파이프라인, 서비스 B(무인 매장 결제 플랫폼, 입사 전부터 운영되던 <span class="nb">서비스)의</span> 백엔드를 혼자 맡고 있음</p>
+    <p class="links">
+      <a href="https://github.com/LJW22222">GitHub</a>
+      <a href="https://ljwstudy.tistory.com/">기술 블로그</a>
+      <a href="mailto:rnralsakstp2@naver.com">rnralsakstp2@naver.com</a>
+      <a class="btn web-only" href="portfolio.pdf" download>PDF 내려받기</a>
+    </p>
+    <h2 class="cover-title">핵심 사례</h2>
+    <div class="metrics">
+      <div class="metric"><b>3.93% → 0%</b><a href="#case-notification"><i>01</i>알림 묵음 누락</a><span>알림 누락, 같은 부하 3,800건 기준</span></div>
+      <div class="metric"><b>61.8% → 0%</b><a href="#case-payment"><i>02</i>결제 락 경합</a><span>락 경합 에러 화면, 결제 콜백 218/353 → 0/60</span></div>
+      <div class="metric"><b>99.6%</b><a href="#case-hybrid-stt"><i>03</i>하이브리드 STT 파이프라인</a><span>운영 24일간 녹음 549건 중 Mac mini 처리 비율</span></div>
+      <div class="metric"><b>13.60% → 9.37%</b><a href="#case-stt-accuracy"><i>04</i>STT 인식 오류율</a><span>STT 오류율(CER), 같은 정답지 11구간, 9.37%는 실험값</span></div>
+    </div>
+    <p class="stack"><b>기술 스택</b>Java, Spring Boot, JPA, MyBatis, MySQL, Redis, AWS(EC2, RDS, S3, Lambda, SQS), Docker, Python, Prometheus, Grafana</p>
+  </header>
+
+  <section class="case" id="case-notification">
+    <h2>알림 묵음 누락 해결 및 트랜잭션 경계 재설계</h2>
+    <p class="case-meta">2026.07 | 서비스 A(레슨 녹음 AI 피드백 앱) | Spring Boot, JPA, MySQL, 트랜잭션 이벤트, 부하 테스트</p>
+    <h3>배경</h3>
+    <p>서비스 A는 레슨이 끝나면 AI 분석 카드를 만들고 사용자에게 알림을 보냄. 출시 전 부하 감사에서 HTTP 에러는 0%였지만 알림 레코드 일부가 사라짐. 목표는 같은 부하에서 알림 누락 0건.</p>
+    <h3>과제</h3>
+    <p>알림 레코드 8.7%(323/3,719)가 애플리케이션 예외 없이 누락되고 복구 경로도 없었음. HTTP 지표로는 보이지 않아 어디서 빠지는지부터 찾아야 했음.</p>
+    <h3>행동</h3>
+    <ul>
+      <li>부하 검증 설계부터 원인 분석, 리스너 재설계, 재측정까지 전담(백엔드 1인)</li>
+      <li>Node.js 부하 테스트로 콜백 API 요청 수와 카드, 알림 row 수를 단계별로 대조해 누락 구간을 특정함</li>
+      <li>처음 8.7%는 공유 비동기 풀이 포화돼 알림 작업이 거부된 경로가 주였음. 포화 시 커밋 스레드가 직접 실행하게 한 1차 수정은 누락 53%, 알림 저장에 REQUIRES_NEW를 붙인 2차 수정은 누락 33%와 HTTP 에러 59%(커넥션 풀 고갈 <span class="nb">정황)로</span> 실패해 되돌림</li>
+      <li>REQUIRES_NEW가 붙은 리스너만 누락 0이라는 대조군과 Spring 문서의 동작을 종합해, 커밋 스레드에서 실행된 알림 INSERT가 이미 끝난 트랜잭션에 참여해 반영되지 않는 경로를 핵심 원인으로 판단함</li>
+      <li>스레드 풀 튜닝, CDC 릴레이, 별도 outbox 테이블 대신, 리스너 6개에서 @Async를 빼고 BEFORE_COMMIT으로 바꿔 도메인 데이터와 같은 트랜잭션으로 묶음. 외부 발송은 기존 폴링 경로에 그대로 둠</li>
+    </ul>
+    <pre><code>@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+public void handle(CardCreatedEvent event) {
+    notificationRepository.save(Notification.pending(event.userId(), event.cardId()));
+}</code></pre>
+    <p class="code-note">예시 코드: 구조를 보여 주려고 다시 쓴 코드</p>
+    <figure>
+      <div class="figure-scroll">
+        <svg role="img" aria-label="알림 저장 흐름의 수정 전후. 전에는 비동기 리스너가 풀이 차면 알림 작업을 거부했고, 커밋 스레드에서 돌면 알림 INSERT가 끝난 트랜잭션에 참여해 반영되지 않았음. 후에는 BEFORE_COMMIT으로 도메인 데이터와 함께 커밋됨" viewBox="0 0 760 290">
+          <defs><marker id="arrow-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker></defs>
+          <text x="20" y="22" class="d-title">전</text>
+          <rect x="20" y="36" width="340" height="56" rx="6" class="d-box"/>
+          <text x="190" y="69" text-anchor="middle" class="d-text">도메인 트랜잭션(카드 저장) 커밋</text>
+          <line x1="190" y1="92" x2="190" y2="110" class="d-line" marker-end="url(#arrow-n)"/>
+          <rect x="20" y="112" width="340" height="56" rx="6" class="d-box"/>
+          <text x="190" y="136" text-anchor="middle" class="d-text">AFTER_COMMIT 리스너(@Async)</text>
+          <text x="190" y="156" text-anchor="middle" class="d-text">알림 INSERT</text>
+          <line x1="190" y1="168" x2="190" y2="186" class="d-line" marker-end="url(#arrow-n)"/>
+          <rect x="20" y="188" width="340" height="56" rx="6" class="d-box-muted"/>
+          <text x="190" y="212" text-anchor="middle" class="d-text">풀 포화 땐 거부, 커밋 스레드에서 돌면</text>
+          <text x="190" y="232" text-anchor="middle" class="d-text">끝난 트랜잭션에 참여해 반영 안 됨</text>
+          <text x="190" y="272" text-anchor="middle" class="d-small">같은 날 같은 부하: 알림 3.93%(148/3,769) 누락</text>
+          <text x="400" y="22" class="d-title">후</text>
+          <rect x="400" y="36" width="340" height="56" rx="6" class="d-box-accent"/>
+          <text x="570" y="60" text-anchor="middle" class="d-text">도메인 트랜잭션 안에서</text>
+          <text x="570" y="80" text-anchor="middle" class="d-text">카드 저장 + 알림 INSERT(BEFORE_COMMIT)</text>
+          <line x1="570" y1="92" x2="570" y2="110" class="d-line" marker-end="url(#arrow-n)"/>
+          <rect x="400" y="112" width="340" height="56" rx="6" class="d-box"/>
+          <text x="570" y="145" text-anchor="middle" class="d-text">한 번에 커밋: 같이 성공, 같이 실패</text>
+          <line x1="570" y1="168" x2="570" y2="186" class="d-line" marker-end="url(#arrow-n)"/>
+          <rect x="400" y="188" width="340" height="56" rx="6" class="d-box"/>
+          <text x="570" y="212" text-anchor="middle" class="d-text">외부 발송은 기존 폴링 잡이</text>
+          <text x="570" y="232" text-anchor="middle" class="d-text">PENDING 알림을 재시도</text>
+          <text x="570" y="272" text-anchor="middle" class="d-small">같은 부하 3,800건, 동시 40에서 누락 0건</text>
+        </svg>
+      </div>
+      <figcaption>알림 저장 흐름의 수정 전후</figcaption>
+    </figure>
+    <h3>성과</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>전</th><th>후</th><th>측정 조건</th></tr></thead>
+        <tbody>
+          <tr><td>알림 누락</td><td>3.93%(148/3,769)</td><td>0%(0/3,800)</td><td>같은 날 같은 부하(3,800건, 동시 40), 로컬 단일 A/B 실행</td></tr>
+          <tr><td>처리량</td><td>기준</td><td>20% 향상(59.1 → 71.2 TPS)</td><td>같은 조건</td></tr>
+          <tr><td>p50 응답 시간</td><td>기준</td><td>19% 단축(578 → 470ms)</td><td>같은 조건</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>배운 점: HTTP 지표가 정상이어도 데이터는 사라질 수 있음. 요청 수와 저장된 row 수를 대조하는 절차를 이후 크레딧 감사에도 고정 단계로 씀</p>
+    <p class="case-meta">관련 글: <a href="https://ljwstudy.tistory.com/entry/HTTP-%EC%97%90%EB%9F%AC-0%EC%9D%B8%EB%8D%B0-%EC%95%8C%EB%A6%BC%EB%A0%88%EC%BD%94%EB%93%9C-87%EA%B0%80-%EC%82%AC%EB%9D%BC%EC%A1%8C%EB%8B%A4">HTTP 에러 0%, 알림레코드 8.7% 유실</a></p>
+  </section>
+
+  <section class="case" id="case-payment">
+    <h2>결제 이중 처리 락 경합 해결 및 웹훅 단일 Writer 재설계</h2>
+    <p class="case-meta">2026.04 ~ 2026.06 | 서비스 B(무인 매장 결제 플랫폼, 입사 전부터 운영되던 서비스) | Spring, MyBatis, Redis SET NX 락, PG 웹훅</p>
+    <h3>배경</h3>
+    <p>서비스 B는 주문 누락 CS를 막으려고 결제 콜백과 웹훅을 모두 저장 경로로 두고, Redis 락으로 중복 처리를 막고 있었음. 목표는 결제가 정상이면 사용자도 정상 화면을 보게 하는 것.</p>
+    <h3>과제</h3>
+    <p>PG에서는 결제가 정상 처리됐는데도 3일간 결제 콜백의 61.8%(<span class="nb">218/353)가</span> 락 경합으로 에러 화면을 받아 재결제가 생김. 예외 로그는 0건이라 원인이 보이지 않았음.</p>
+    <h3>행동</h3>
+    <ul>
+      <li>안전망 설계, 원인 진단, 재설계, 사후 검증 전담(백엔드 1인)</li>
+      <li>예외가 없다는 점에서 정상 흐름 안의 에러 응답을 의심했고, 남은 로그 한 줄로 하루 85건 중 락 획득 실패 20건이 전부 복구되지 않았음을 확인함</li>
+      <li>락 실패 때 폴링으로 기다리게 하는 안은 버림. 증상은 사라지지만 두 경로가 같은 데이터를 쓰는 구조가 남기 때문. PG 권장 방향대로 정상 경로에서는 웹훅만 저장하고 콜백은 저장 여부만 확인하게 책임을 나눔</li>
+      <li>웹훅은 PG 재조회로 결제를 검증한 뒤 저장하고, 주문 생성 실패 시 PG 자동취소로 보상함. 폴링 코드에 처음 붙였던 읽기 전용 트랜잭션이 5초 내내 커넥션을 붙잡게 된다는 점을 코드 리뷰에서 찾아 제거함</li>
+    </ul>
+    <figure>
+      <div class="figure-scroll">
+        <svg role="img" aria-label="결제 저장 흐름의 수정 전후. 전에는 콜백과 웹훅이 같은 Redis 락을 두고 경합해 락을 못 잡은 콜백이 에러를 냈고, 후에는 정상 경로에서 웹훅만 저장하고 콜백은 확인만 함" viewBox="0 0 760 290">
+          <defs><marker id="arrow-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker></defs>
+          <text x="20" y="22" class="d-title">전</text>
+          <rect x="20" y="36" width="340" height="56" rx="6" class="d-box"/>
+          <text x="190" y="69" text-anchor="middle" class="d-text">콜백과 웹훅이 둘 다 결제를 저장</text>
+          <line x1="190" y1="92" x2="190" y2="110" class="d-line" marker-end="url(#arrow-p)"/>
+          <rect x="20" y="112" width="340" height="56" rx="6" class="d-box"/>
+          <text x="190" y="145" text-anchor="middle" class="d-text">같은 Redis 락(SET NX)을 두고 경합</text>
+          <line x1="190" y1="168" x2="190" y2="186" class="d-line" marker-end="url(#arrow-p)"/>
+          <rect x="20" y="188" width="340" height="56" rx="6" class="d-box-muted"/>
+          <text x="190" y="212" text-anchor="middle" class="d-text">락을 못 잡은 콜백은 에러 응답</text>
+          <text x="190" y="232" text-anchor="middle" class="d-text">사용자는 에러 화면을 보고 재결제</text>
+          <text x="190" y="272" text-anchor="middle" class="d-small">결제 콜백 61.8%(3일간 218/353)가 락 경합 에러 화면</text>
+          <text x="400" y="22" class="d-title">후</text>
+          <rect x="400" y="36" width="340" height="56" rx="6" class="d-box-accent"/>
+          <text x="570" y="60" text-anchor="middle" class="d-text">정상 경로는 웹훅만 저장</text>
+          <text x="570" y="80" text-anchor="middle" class="d-text">PG 재조회로 검증한 뒤 저장</text>
+          <line x1="570" y1="92" x2="570" y2="110" class="d-line" marker-end="url(#arrow-p)"/>
+          <rect x="400" y="112" width="340" height="56" rx="6" class="d-box"/>
+          <text x="570" y="145" text-anchor="middle" class="d-text">콜백은 저장 여부만 확인, 락 없음</text>
+          <line x1="570" y1="168" x2="570" y2="186" class="d-line" marker-end="url(#arrow-p)"/>
+          <rect x="400" y="188" width="340" height="56" rx="6" class="d-box"/>
+          <text x="570" y="212" text-anchor="middle" class="d-text">주문 생성이 실패하면</text>
+          <text x="570" y="232" text-anchor="middle" class="d-text">PG 자동취소로 보상</text>
+          <text x="570" y="272" text-anchor="middle" class="d-small">락 경합 에러 0%(0/60), 직접 추적 1,150건 재발 0건</text>
+        </svg>
+      </div>
+      <figcaption>결제 저장 흐름의 수정 전후</figcaption>
+    </figure>
+    <h3>성과</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>전</th><th>후</th><th>측정 조건</th></tr></thead>
+        <tbody>
+          <tr><td>락 경합 에러 화면</td><td>61.8%(결제 콜백 218/353)</td><td>0%(0/60)</td><td>전: 배포 전 3일 운영 기록(락 경합 224건 중 정상 추정 6건 제외), 후: 재설계 뒤 확인한 60건</td></tr>
+          <tr><td>락 경합</td><td>224건(배포 전 3일)</td><td>0건(재설계 뒤 60건)</td><td>정상 경로의 콜백이 락을 잡지 않는 구조</td></tr>
+          <tr><td>재발</td><td>-</td><td>0건</td><td>2개월 약 4,500건 중 직접 추적한 1,150건</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>배운 점: 증상을 덮는 대신 정상 경로에서 저장하는 쪽을 웹훅 하나로 줄이고, 고친 뒤 2개월간 재발을 추적해 확인하는 것까지를 해결로 봄</p>
+    <p class="case-meta">관련 글: <a href="https://ljwstudy.tistory.com/entry/%EC%BD%9C%EB%B0%B1%EA%B3%BC-%EC%9B%B9%ED%9B%85%EC%9D%B4-%EA%B0%99%EC%9D%80-%EB%9D%BD%EC%9D%84-%EC%9E%A1%EC%9C%BC%EB%A9%B4-%EC%83%9D%EA%B8%B0%EB%8A%94-%EC%9D%BC">콜백과 웹훅이 같은 락을 잡으면 생기는 일</a></p>
+  </section>
+
+  <section class="case" id="case-hybrid-stt">
+    <h2>Mac mini와 AWS SQS를 활용한 하이브리드 STT 파이프라인 구축</h2>
+    <p class="case-meta">2026.07 ~ 2026.09 | 서비스 A | AWS Lambda, SQS, Transcribe, whisper.cpp, Mac mini</p>
+    <h3>배경</h3>
+    <p>건별 비용을 관측해 보니(2026.05~06, 60초 이상 녹음 100건) AI 분석 원가의 약 80%가 클라우드 STT 비용이었음. 비용은 줄이되 60분 녹음을 10분 안에 처리한다는 목표는 지켜야 했음.</p>
+    <h3>과제</h3>
+    <p>Mac mini 한 대로 전부 처리하면 부하 시뮬레이션에서 10분 목표를 보장할 수 없었음. 비용과 처리 시간을 함께 만족하는 구조가 필요했음.</p>
+    <h3>행동</h3>
+    <ul>
+      <li>하이브리드 구조 설계, Mac mini 워커 구현, 용량 검증, 운영 전담(백엔드 1인)</li>
+      <li>SQS로 받은 작업을 Mac mini whisper.cpp 워커(동시 <span class="nb">4슬롯)가</span> 처리하고, 라우팅 Lambda가 워커 무응답이나 예상 완료 시간 20분 초과를 감지하면 Transcribe로 자동 전환하게 함</li>
+      <li>전부 로컬로 처리하는 안은 버림. 시뮬레이션에서 10분 목표를 지키는 동시 처리량이 0건이었기 때문. 무거운 파일부터 Transcribe로 넘기는 방식으로 같은 시뮬레이션(실측 28건의 처리 시간으로 계산, Mac mini 한 대에 한꺼번에 몰리는 최악 <span class="nb">가정)에서</span> 동시 18건까지 목표를 지킴</li>
+      <li>근거 없이 쓰던 처리량 숫자를 실측 처리 속도와 슬롯 수로 다시 계산해 바로잡음</li>
+    </ul>
+    <figure>
+      <div class="figure-scroll">
+        <svg role="img" aria-label="하이브리드 STT 흐름. 앱 업로드가 라우팅 Lambda와 SQS를 거쳐 Mac mini 워커로 가고, 워커 무응답이나 예상 완료 시간 20분 초과 때는 AWS Transcribe로 자동 전환됨" viewBox="0 0 760 290">
+          <defs><marker id="arrow-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker></defs>
+          <text x="20" y="22" class="d-title">평소에는 Mac mini, 장애와 과부하 때는 Transcribe</text>
+          <rect x="20" y="96" width="120" height="56" rx="6" class="d-box"/>
+          <text x="80" y="129" text-anchor="middle" class="d-text">앱 업로드</text>
+          <line x1="140" y1="124" x2="164" y2="124" class="d-line" marker-end="url(#arrow-h)"/>
+          <rect x="168" y="96" width="150" height="56" rx="6" class="d-box"/>
+          <text x="243" y="129" text-anchor="middle" class="d-text">라우팅 Lambda</text>
+          <line x1="318" y1="124" x2="342" y2="124" class="d-line" marker-end="url(#arrow-h)"/>
+          <rect x="346" y="96" width="90" height="56" rx="6" class="d-box"/>
+          <text x="391" y="129" text-anchor="middle" class="d-text">SQS</text>
+          <line x1="436" y1="124" x2="460" y2="124" class="d-line" marker-end="url(#arrow-h)"/>
+          <rect x="464" y="96" width="276" height="56" rx="6" class="d-box-accent"/>
+          <text x="602" y="120" text-anchor="middle" class="d-text">Mac mini 워커</text>
+          <text x="602" y="140" text-anchor="middle" class="d-text">whisper.cpp, 동시 4슬롯</text>
+          <text x="602" y="178" text-anchor="middle" class="d-small">운영 24일 549건 중 547건(99.6%)</text>
+          <line x1="243" y1="152" x2="243" y2="196" class="d-line" marker-end="url(#arrow-h)"/>
+          <rect x="168" y="200" width="150" height="56" rx="6" class="d-box-muted"/>
+          <text x="243" y="233" text-anchor="middle" class="d-text">AWS Transcribe</text>
+          <text x="330" y="222" class="d-small">워커 무응답 또는 예상 완료 20분 초과 때</text>
+          <text x="330" y="242" class="d-small">자동 전환(운영 24일 중 2건)</text>
+        </svg>
+      </div>
+      <figcaption>하이브리드 STT 처리 흐름</figcaption>
+    </figure>
+    <h3>성과</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>값</th><th>측정 조건</th></tr></thead>
+        <tbody>
+          <tr><td>Mac mini 처리 비율</td><td>99.6%(547/549)</td><td>운영 24일, Transcribe 전환 2건</td></tr>
+          <tr><td>STT 비용 절감</td><td>약 $253(월 환산 약 $316)</td><td>같은 기간을 Transcribe로 처리했을 때와 비교, 장비비 제외</td></tr>
+          <tr><td>60분 녹음 처리 시간</td><td>중앙값 6.8분(최대 12.8분)</td><td>운영 1주(9/13~9/19), 20분 이상 녹음 75건을 60분 기준으로 환산</td></tr>
+          <tr><td>10분 초과</td><td>0건(0/50)</td><td>하루 50건을 처리한 날(9/14), 실제 처리 시간 기준</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>배운 점: 평소 경로와 넘칠 때의 경로를 나누면 비용을 줄이면서 처리 시간 목표도 함께 관리할 수 있음</p>
+    <p class="case-meta">관련 글: <a href="https://ljwstudy.tistory.com/entry/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EA%B8%B0%EB%B0%98-%EC%84%9C%EB%B2%84%EB%A6%AC%EC%8A%A4-AI-%EC%B6%94%EB%A1%A0-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8">이벤트 기반 서버리스 AI 추론 파이프라인</a> (전환 전 구조와 비용 관측)</p>
+  </section>
+
+  <section class="case" id="case-stt-accuracy">
+    <h2>STT 인식 오류율 개선 및 정답지 기반 평가 체계 구축</h2>
+    <p class="case-meta">2026.07 ~ 2026.09 | 서비스 A | whisper.cpp, Python, CER, WER 채점</p>
+    <h3>배경</h3>
+    <p>레슨 녹음에는 소음과 음악이 섞여 클라우드 STT 오류율이 높았고, 품질을 잴 기준도 없었음. 목표는 개선 여부를 숫자로 판정하는 평가 체계를 만들고 그 기준으로 오류율을 낮추는 것.</p>
+    <h3>과제</h3>
+    <p>GPU를 함께 쓰는 동시 실행에서는 같은 구간도 결과가 흔들렸고(같은 3분 구간을 3개 동시에 돌렸을 때 텍스트 14~16% 차이), 확신도 같은 간접 지표로는 실제 정확도를 알 수 없었음.</p>
+    <h3>행동</h3>
+    <ul>
+      <li>평가 체계 설계, 오류 원인 분석, 디코딩, 후처리, 라우팅 개선 전담(백엔드 1인). 실험 코드와 반복 측정은 AI 코딩 도구에 맡기고, 정답지를 만든 뒤로는 채택을 정답지 점수로만 판정함</li>
+      <li>사람이 직접 고친 정답지와 채점기를 만들고, 채택 기준을 실험 전에 정함. 정답지 대부분이 whisper 초안을 고친 것이라 whisper에 유리한 편향이 있음을 감사로 확인해 한계로 기록함</li>
+      <li>잡음 제거는 버림. 초기 실험에서는 확신도가 올랐지만, 당시 정답지 17구간으로 다시 재니 모두 나빠졌기 때문</li>
+      <li>음악 녹음의 환각 루프는 디코딩 옵션으로 풀어 한 녹음의 10분 구간 전사가 12자에서 1,345자로 돌아옴. 음악 크기를 재는 게이트는 경로가 바뀐 2구간의 CER을 약 21%에서 13~14%로 낮췄고(실험), 9/15부터 운영에 적용함</li>
+      <li>GPU 읽기, 쓰기 락으로 동시 실행 때 결과가 흔들리던 문제를 줄임. 락을 켠 뒤 당시 정답지 17구간을 4개씩 동시에 다시 돌려도 결과가 같았음(점수 차이 0.00)</li>
+    </ul>
+    <figure>
+      <div class="figure-scroll">
+        <svg role="img" aria-label="정답지 기반 채택 흐름. 개선 후보를 같은 정답지로 채점하고, 실험 전에 정한 기준을 통과하면 채택, 실패하면 버림" viewBox="0 0 760 290">
+          <defs><marker id="arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker></defs>
+          <text x="20" y="22" class="d-title">정답지를 만든 뒤에는 점수로만 채택</text>
+          <rect x="20" y="96" width="150" height="56" rx="6" class="d-box"/>
+          <text x="95" y="120" text-anchor="middle" class="d-text">개선 후보</text>
+          <text x="95" y="140" text-anchor="middle" class="d-text">디코딩, 후처리, 게이트</text>
+          <line x1="170" y1="124" x2="194" y2="124" class="d-line" marker-end="url(#arrow-s)"/>
+          <rect x="198" y="96" width="220" height="56" rx="6" class="d-box-accent"/>
+          <text x="308" y="120" text-anchor="middle" class="d-text">같은 정답지로 채점</text>
+          <text x="308" y="140" text-anchor="middle" class="d-text">CER, WER</text>
+          <line x1="418" y1="124" x2="442" y2="124" class="d-line" marker-end="url(#arrow-s)"/>
+          <rect x="446" y="96" width="130" height="56" rx="6" class="d-box"/>
+          <text x="511" y="120" text-anchor="middle" class="d-text">실험 전에</text>
+          <text x="511" y="140" text-anchor="middle" class="d-text">정한 기준</text>
+          <line x1="576" y1="112" x2="604" y2="84" class="d-line" marker-end="url(#arrow-s)"/>
+          <rect x="608" y="56" width="132" height="48" rx="6" class="d-box"/>
+          <text x="674" y="85" text-anchor="middle" class="d-text">통과: 채택</text>
+          <line x1="576" y1="136" x2="604" y2="164" class="d-line" marker-end="url(#arrow-s)"/>
+          <rect x="608" y="148" width="132" height="48" rx="6" class="d-box-muted"/>
+          <text x="674" y="177" text-anchor="middle" class="d-text">실패: 버림</text>
+          <text x="20" y="236" class="d-small">예: 잡음 제거는 초기에 확신도가 올랐지만 당시 정답지 17구간으로 다시 재니 모두 나빠져 버림</text>
+          <text x="20" y="260" class="d-small">정답지는 사람이 고친 전사본(whisper에 유리한 편향 있음), 9.37%는 게이트를 켠 9/15 설정의 실험값</text>
+        </svg>
+      </div>
+      <figcaption>정답지 기반 채택 흐름</figcaption>
+    </figure>
+    <h3>성과</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>전</th><th>후</th><th>측정 조건</th></tr></thead>
+        <tbody>
+          <tr><td>CER</td><td>13.60%</td><td>9.37%</td><td>같은 정답지 11구간 실험, 전은 첫 구현(7/24), 후는 게이트를 켠 9/15 설정</td></tr>
+          <tr><td>WER</td><td>23.23%</td><td>12.65%</td><td>같은 조건</td></tr>
+          <tr><td>게이트 적용 전 CER, WER</td><td>-</td><td>10.69%, 14.87%</td><td>같은 11구간, 9/15 게이트 적용 직전 설정</td></tr>
+          <tr><td>참고: Transcribe CER</td><td>-</td><td>18.25%</td><td>같은 11구간</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>배운 점: 좋아 보이는 간접 지표보다, 사람이 고친 정답지와 미리 정한 기준이 채택을 결정해야 함</p>
+  </section>
+
+  <!-- cases -->
+
+  <section id="how">
+    <h2>일하는 방식</h2>
+    <ul>
+      <li><strong>AI를 검증 체계로 씀.</strong> 구현 에이전트와 부하 검증 에이전트의 맥락을 나눠 교차 검증했고, 이 감사에서 HTTP 지표로는 보이지 않던 알림 누락을 찾음. QA 에이전트를 직접 만들어 에이전트 7개로 API 154개를 점검했고, 권한 누락(심각도 <span class="nb">높음)을</span> 찾아 고친 뒤 다시 검증함(비참여자 403, 없는 레슨 404). 에이전트는 코드를 고치지 않고 보고만 하며, 무엇을 고칠지는 직접 판단함</li>
+      <li><strong>앱 개발자와 API 계약을 맞춤.</strong> 슬랙으로 계약 변경과 연동 오류를 조율함. v3 전환 때 구버전 전용 API 6개를 정리하고, 폐기한 API의 응답을 410으로 통일했으며, Swagger 문서를 전수 조사함</li>
+      <li><strong>운영은 지표로 봄.</strong> Prometheus, Grafana, Loki로 지표와 로그를 모으고, Slack 알림과 GitHub Actions 배포를 직접 구성함</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>기술 스택: Java, Spring Boot, JPA, MyBatis, MySQL, Redis, AWS(EC2, RDS, S3, Lambda, SQS), Docker, Python, Prometheus, Grafana</p>
+    <p>연락처: <a href="mailto:rnralsakstp2@naver.com">rnralsakstp2@naver.com</a> | <a href="https://github.com/LJW22222">github.com/LJW22222</a> | <a href="https://ljwstudy.tistory.com/">ljwstudy.tistory.com</a></p>
+  </footer>
+</main>
+</body>
+</html>
