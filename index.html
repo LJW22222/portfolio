@@ -77,10 +77,10 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
   .metric { padding: 14pt 0; }
   .stack { margin-top: 16mm; }
   h2, h3 { break-after: avoid; }
-  h3 { margin-top: 12px; }
+  h3 { margin-top: 8px; }
   li + li { margin-top: 2px; }
   figure { margin-top: 10px; }
-  figure svg { width: 84%; margin: 0 auto; }
+  figure svg { width: 78%; margin: 0 auto; }
   figcaption { text-align: center; }
   table { font-size: 9.5pt; }
   th, td { padding: 4px 8px; }
@@ -104,7 +104,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
     <div class="metrics">
       <div class="metric"><b>3.93% → 0%</b><a href="#case-notification"><i>01</i>알림 묵음 누락</a><span>알림 누락, 같은 부하 3,800건 기준</span></div>
       <div class="metric"><b>61.8% → 0%</b><a href="#case-payment"><i>02</i>결제 락 경합</a><span>락 경합 에러 화면, 결제 콜백 218/353 → 0/60</span></div>
-      <div class="metric"><b>99.6%</b><a href="#case-hybrid-stt"><i>03</i>하이브리드 STT 파이프라인</a><span>운영 24일간 녹음 549건 중 Mac mini 처리 비율</span></div>
+      <div class="metric"><b>월 약 $316</b><a href="#case-hybrid-stt"><i>03</i>하이브리드 STT 파이프라인</a><span>STT 비용 절감(월 환산, 장비비 제외), 녹음 549건 중 99.6% Mac mini 처리</span></div>
       <div class="metric"><b>13.60% → 9.37%</b><a href="#case-stt-accuracy"><i>04</i>STT 인식 오류율</a><span>STT 오류율(CER), 같은 정답지 11구간, 9.37%는 실험값</span></div>
     </div>
     <p class="stack"><b>기술 스택</b>Java, Spring Boot, JPA, MyBatis, MySQL, Redis, AWS(EC2, RDS, S3, Lambda, SQS), Docker, Python, Prometheus, Grafana</p>
@@ -114,15 +114,15 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
     <h2>알림 묵음 누락 해결 및 트랜잭션 경계 재설계</h2>
     <p class="case-meta">2026.07 | 레슨앱 | Spring Boot, JPA, MySQL, 트랜잭션 이벤트, 부하 테스트</p>
     <h3>배경</h3>
-    <p>레슨앱은 레슨이 끝나면 AI 분석 카드를 만들고 사용자에게 알림을 보냄. 출시 전 부하 감사에서 HTTP 에러는 0%였지만 알림 레코드 일부가 사라짐. 목표는 같은 부하에서 알림 누락 0건.</p>
+    <p>레슨앱은 레슨이 끝나면 AI 분석 카드를 만들고 사용자에게 알림을 보냄. 출시 전 부하 감사에서 알림 레코드 일부가 사라짐. 목표는 같은 부하에서 알림 누락 0건.</p>
     <h3>과제</h3>
-    <p>알림 레코드 8.7%(323/3,719)가 애플리케이션 예외 없이 누락되고 복구 경로도 없었음. HTTP 지표로는 보이지 않아 어디서 빠지는지부터 찾아야 했음.</p>
+    <p>알림 레코드 8.7%(323/3,719, 분모는 생성된 카드 수)가 HTTP 에러 없이 누락되고(로그에는 작업 거부 예외 한 줄뿐) 복구 경로도 없었음. HTTP 지표로는 보이지 않아 어디서 빠지는지부터 찾아야 했음.</p>
     <h3>행동</h3>
     <ul>
       <li>부하 검증 설계부터 원인 분석, 리스너 재설계, 재측정까지 전담(백엔드 1인)</li>
       <li>Node.js 부하 테스트로 콜백 API 요청 수와 카드, 알림 row 수를 단계별로 대조해 누락 구간을 특정함</li>
-      <li>처음 8.7%는 공유 비동기 풀이 포화돼 알림 작업이 거부된 경로가 주였음. 포화 시 커밋 스레드가 직접 실행하게 한 1차 수정은 누락 53%, 알림 저장에 REQUIRES_NEW를 붙인 2차 수정은 누락 33%와 HTTP 에러 59%(커넥션 풀 고갈 <span class="nb">정황)로</span> 실패해 되돌림</li>
-      <li>REQUIRES_NEW가 붙은 리스너만 누락 0이라는 대조군과 Spring 문서의 동작을 종합해, 커밋 스레드에서 실행된 알림 INSERT가 이미 끝난 트랜잭션에 참여해 반영되지 않는 경로를 핵심 원인으로 판단함</li>
+      <li>처음 8.7%는 공유 비동기 풀이 포화되면 기본 거부 정책이 알림 작업을 버린 경로가 주였음. 커밋을 마친 스레드가 직접 실행하게 한 1차 수정은 누락 53%, REQUIRES_NEW를 붙인 2차 수정은 기본 커넥션 풀 10개에서 커넥션 수요가 두 배가 돼 누락 33%와 HTTP 에러 59%(커넥션 풀 고갈 <span class="nb">정황)로</span> 실패해 되돌림</li>
+      <li>처음부터 REQUIRES_NEW가 붙은 연습 항목 리스너만 같은 이벤트에서 누락 0이었고, 이 대조군과 Spring 문서의 동작을 종합해, 커밋을 마친 스레드의 알림 INSERT가 끝난 트랜잭션에 참여해 사라지는 경로를 53%의 원인으로, 알림 저장을 커밋 뒤로 미룬 트랜잭션 경계를 근본 원인으로 판단함</li>
       <li>스레드 풀 튜닝, CDC 릴레이, 별도 outbox 테이블 대신, 리스너 6개에서 @Async를 빼고 BEFORE_COMMIT으로 바꿔 도메인 데이터와 같은 트랜잭션으로 묶음. 외부 발송은 기존 폴링 경로에 그대로 둠</li>
     </ul>
     <pre><code>@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
@@ -132,7 +132,7 @@ public void handle(CardCreatedEvent event) {
     <p class="code-note">예시 코드: 구조를 보여 주려고 다시 쓴 코드</p>
     <figure>
       <div class="figure-scroll">
-        <svg role="img" aria-label="알림 저장 흐름의 수정 전후. 전에는 비동기 리스너가 풀이 차면 알림 작업을 거부했고, 커밋 스레드에서 돌면 알림 INSERT가 끝난 트랜잭션에 참여해 반영되지 않았음. 후에는 BEFORE_COMMIT으로 도메인 데이터와 함께 커밋됨" viewBox="0 0 760 290">
+        <svg role="img" aria-label="알림 저장 흐름의 수정 전후. 전에는 비동기 리스너가 풀이 차면 알림 작업을 거부했고, 커밋을 마친 스레드에서 돌면 알림 INSERT가 끝난 트랜잭션에 참여해 반영되지 않았음. 후에는 BEFORE_COMMIT으로 도메인 데이터와 함께 커밋됨" viewBox="0 0 760 290">
           <defs><marker id="arrow-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker></defs>
           <text x="20" y="22" class="d-title">전</text>
           <rect x="20" y="36" width="340" height="56" rx="6" class="d-box"/>
@@ -143,7 +143,7 @@ public void handle(CardCreatedEvent event) {
           <text x="190" y="156" text-anchor="middle" class="d-text">알림 INSERT</text>
           <line x1="190" y1="168" x2="190" y2="186" class="d-line" marker-end="url(#arrow-n)"/>
           <rect x="20" y="188" width="340" height="56" rx="6" class="d-box-muted"/>
-          <text x="190" y="212" text-anchor="middle" class="d-text">풀 포화 땐 거부, 커밋 스레드에서 돌면</text>
+          <text x="190" y="212" text-anchor="middle" class="d-text">풀 포화 땐 거부, 커밋을 마친 스레드에서 돌면</text>
           <text x="190" y="232" text-anchor="middle" class="d-text">끝난 트랜잭션에 참여해 반영 안 됨</text>
           <text x="190" y="272" text-anchor="middle" class="d-small">같은 날 같은 부하: 알림 3.93%(148/3,769) 누락</text>
           <text x="400" y="22" class="d-title">후</text>
@@ -173,6 +173,7 @@ public void handle(CardCreatedEvent event) {
         </tbody>
       </table>
     </div>
+    <p>참고: 8.7%는 동시성 구성이 다른 최초 감사 값이라, 효과는 같은 날 다시 잰 3.93%와만 비교함. 처리량과 응답 시간은 단일 실행 값이며, 비동기 큐 경쟁이 사라진 영향으로 봄</p>
     <p>배운 점: HTTP 지표가 정상이어도 데이터는 사라질 수 있음. 요청 수와 저장된 row 수를 대조하는 절차를 이후 크레딧 감사에도 고정 단계로 씀</p>
     <p class="case-meta">관련 글: <a href="https://ljwstudy.tistory.com/entry/HTTP-%EC%97%90%EB%9F%AC-0%EC%9D%B8%EB%8D%B0-%EC%95%8C%EB%A6%BC%EB%A0%88%EC%BD%94%EB%93%9C-87%EA%B0%80-%EC%82%AC%EB%9D%BC%EC%A1%8C%EB%8B%A4">HTTP 에러 0%, 알림레코드 8.7% 유실</a></p>
   </section>
@@ -181,15 +182,16 @@ public void handle(CardCreatedEvent event) {
     <h2>결제 이중 처리 락 경합 해결 및 웹훅 단일 Writer 재설계</h2>
     <p class="case-meta">2026.04 ~ 2026.06 | 입사 전부터 운영되던 무인매장 플랫폼 | Spring, MyBatis, Redis SET NX 락, PG 웹훅</p>
     <h3>배경</h3>
-    <p>무인매장 플랫폼은 주문 누락 CS를 막으려고 결제 콜백과 웹훅을 모두 저장 경로로 두고, Redis 락으로 중복 처리를 막고 있었음. 목표는 결제가 정상이면 사용자도 정상 화면을 보게 하는 것.</p>
+    <p>무인매장 플랫폼에서 결제 직후 창을 닫으면 주문이 생기지 않는 CS를 막으려고, 결제 콜백과 웹훅을 모두 저장 경로로 두고 Redis 락으로 중복 처리를 막는 이중 안전망을 직접 넣었음. 목표는 결제가 정상이면 사용자도 정상 화면을 보게 하는 것.</p>
     <h3>과제</h3>
     <p>PG에서는 결제가 정상 처리됐는데도 3일간 결제 콜백의 61.8%(<span class="nb">218/353)가</span> 락 경합으로 에러 화면을 받아 재결제가 생김. 예외 로그는 0건이라 원인이 보이지 않았음.</p>
     <h3>행동</h3>
     <ul>
       <li>안전망 설계, 원인 진단, 재설계, 사후 검증 전담(백엔드 1인)</li>
-      <li>예외가 없다는 점에서 정상 흐름 안의 에러 응답을 의심했고, 남은 로그 한 줄로 하루 85건 중 락 획득 실패 20건이 전부 복구되지 않았음을 확인함</li>
+      <li>예외가 없다는 점에서 정상 흐름 안의 에러 응답을 의심했고, 남은 로그 한 줄로 처음 발견한 날 결제 콜백 85건 중 락 획득 실패 20건이 하나도 복구되지 못하고 모두 에러 화면으로 끝났음을 확인함(3일 구간보다 낮은 비율은 주말 트래픽 차이)</li>
       <li>락 실패 때 폴링으로 기다리게 하는 안은 버림. 증상은 사라지지만 두 경로가 같은 데이터를 쓰는 구조가 남기 때문. PG 권장 방향대로 정상 경로에서는 웹훅만 저장하고 콜백은 저장 여부만 확인하게 책임을 나눔</li>
       <li>웹훅은 PG 재조회로 결제를 검증한 뒤 저장하고, 주문 생성 실패 시 PG 자동취소로 보상함. 폴링 코드에 처음 붙였던 읽기 전용 트랜잭션이 5초 내내 커넥션을 붙잡게 된다는 점을 코드 리뷰에서 찾아 제거함</li>
+      <li>남은 한계: 웹훅이 서버에 닿지 못한 결제는 아직 받아낼 장치가 없어, PG 웹훅 재발송 설정과 결제 대사 배치를 후속 과제로 둠</li>
     </ul>
     <figure>
       <div class="figure-scroll">
@@ -247,7 +249,7 @@ public void handle(CardCreatedEvent event) {
     <h3>행동</h3>
     <ul>
       <li>하이브리드 구조 설계, Mac mini 워커 구현, 용량 검증, 운영 전담(백엔드 1인)</li>
-      <li>SQS로 받은 작업을 Mac mini whisper.cpp 워커(동시 <span class="nb">4슬롯)가</span> 처리하고, 라우팅 Lambda가 워커 무응답이나 예상 완료 시간 20분 초과를 감지하면 Transcribe로 자동 전환하게 함</li>
+      <li>SQS로 받은 작업을 Mac mini whisper.cpp 워커(동시 <span class="nb">4슬롯)가</span> 처리하고, 라우팅 Lambda가 워커 무응답이나 예상 완료 시간 20분 초과를 감지하면 Transcribe로 자동 전환하게 함. 10분은 60분 녹음의 처리 시간 목표이고, 20분은 대기열까지 포함한 예상 완료 시간의 상한임</li>
       <li>전부 로컬로 처리하는 안은 버림. 시뮬레이션에서 10분 목표를 지키는 동시 처리량이 0건이었기 때문. 무거운 파일부터 Transcribe로 넘기는 방식으로 같은 시뮬레이션(실측 28건의 처리 시간으로 계산, Mac mini 한 대에 한꺼번에 몰리는 최악 <span class="nb">가정)에서</span> 동시 18건까지 목표를 지킴</li>
       <li>근거 없이 쓰던 처리량 숫자를 실측 처리 속도와 슬롯 수로 다시 계산해 바로잡음</li>
     </ul>
@@ -304,9 +306,9 @@ public void handle(CardCreatedEvent event) {
     <h3>행동</h3>
     <ul>
       <li>평가 체계 설계, 오류 원인 분석, 디코딩, 후처리, 라우팅 개선 전담(백엔드 1인). 실험 코드와 반복 측정은 AI 코딩 도구에 맡기고, 정답지를 만든 뒤로는 채택을 정답지 점수로만 판정함</li>
-      <li>사람이 직접 고친 정답지와 채점기를 만들고, 채택 기준을 실험 전에 정함. 정답지 대부분이 whisper 초안을 고친 것이라 whisper에 유리한 편향이 있음을 감사로 확인해 한계로 기록함</li>
-      <li>잡음 제거는 버림. 초기 실험에서는 확신도가 올랐지만, 당시 정답지 17구간으로 다시 재니 모두 나빠졌기 때문</li>
-      <li>음악 녹음의 환각 루프는 디코딩 옵션으로 풀어 한 녹음의 10분 구간 전사가 12자에서 1,345자로 돌아옴. 음악 크기를 재는 게이트는 경로가 바뀐 2구간의 CER을 약 21%에서 13~14%로 낮췄고(실험), 9/15부터 운영에 적용함</li>
+      <li>사람이 직접 고친 정답지와 채점기를 만들고, 채택 기준을 실험 전에 정함. 정답지는 실제 레슨이 아닌 8구간(강의 영상 녹음 7구간, 내부 계정 1구간)을 빼고 새 녹음 2구간을 더해 11구간으로 고정함. 개선 전후는 둘 다 이 11구간으로 채점함. 정답지 대부분이 whisper 초안을 고친 것이라 whisper에 유리한 편향이 있음을 감사로 확인해 한계로 기록함</li>
+      <li>잡음 제거는 버림. 초기 실험에서는 확신도가 올랐지만, 바꾸기 전 정답지 17구간(9/8)으로 다시 재니 모두 나빠졌기 때문</li>
+      <li>음악 녹음의 환각 루프는 디코딩 옵션으로 풀어 한 녹음의 10분 구간 전사가 12자에서 1,345자로 돌아옴. VAD가 발화를 통째로 버린 구간은 그 구간만 VAD 없이 다시 전사해 복구함(실제 녹음 7건에서 사람이 확인). 음악 크기를 재는 게이트는 경로가 바뀐 2구간의 CER을 약 21%에서 13~14%로 낮췄고(실험), 9/15부터 운영에 적용함</li>
       <li>GPU 읽기, 쓰기 락으로 동시 실행 때 결과가 흔들리던 문제를 줄임. 락을 켠 뒤 당시 정답지 17구간을 4개씩 동시에 다시 돌려도 결과가 같았음(점수 차이 0.00)</li>
     </ul>
     <figure>
@@ -345,7 +347,7 @@ public void handle(CardCreatedEvent event) {
           <tr><td>CER</td><td>13.60%</td><td>9.37%</td><td>같은 정답지 11구간 실험, 전은 첫 구현(7/24), 후는 게이트를 켠 9/15 설정</td></tr>
           <tr><td>WER</td><td>23.23%</td><td>12.65%</td><td>같은 조건</td></tr>
           <tr><td>게이트 적용 전 CER, WER</td><td>-</td><td>10.69%, 14.87%</td><td>같은 11구간, 9/15 게이트 적용 직전 설정</td></tr>
-          <tr><td>참고: Transcribe CER</td><td>-</td><td>18.25%</td><td>같은 11구간</td></tr>
+          <tr><td>참고: Transcribe CER</td><td>-</td><td>18.25%</td><td>같은 11구간(정답지가 whisper에 유리)</td></tr>
         </tbody>
       </table>
     </div>
@@ -357,7 +359,7 @@ public void handle(CardCreatedEvent event) {
   <section id="how">
     <h2>일하는 방식</h2>
     <ul>
-      <li><strong>AI를 검증 체계로 씀.</strong> 구현 에이전트와 부하 검증 에이전트의 맥락을 나눠 교차 검증했고, 이 감사에서 HTTP 지표로는 보이지 않던 알림 누락을 찾음. QA 에이전트를 직접 만들어 에이전트 7개로 API 154개를 점검했고, 권한 누락(심각도 <span class="nb">높음)을</span> 찾아 고친 뒤 다시 검증함(비참여자 403, 없는 레슨 404). 에이전트는 코드를 고치지 않고 보고만 하며, 무엇을 고칠지는 직접 판단함</li>
+      <li><strong>AI를 검증 체계로 씀.</strong> 구현 에이전트와 부하 검증 에이전트의 맥락을 나눠 교차 검증했고, 대조 기준을 직접 설계한 이 감사에서 HTTP 지표로는 보이지 않던 알림 누락을 찾음. QA 에이전트를 직접 만들어 에이전트 7개로 API 154개를 점검했고, 권한 누락(심각도 <span class="nb">높음)을</span> 찾아 고친 뒤 다시 검증함(비참여자 403, 없는 레슨 404). 에이전트는 코드를 고치지 않고 보고만 하며, 무엇을 고칠지는 직접 판단함</li>
       <li><strong>앱 개발자와 API 계약을 맞춤.</strong> 슬랙으로 계약 변경과 연동 오류를 조율함. v3 전환 때 구버전 전용 API 6개를 정리하고, 폐기한 API의 응답을 410으로 통일했으며, Swagger 문서를 전수 조사함</li>
       <li><strong>운영은 지표로 봄.</strong> Prometheus, Grafana, Loki로 지표와 로그를 모으고, Slack 알림과 GitHub Actions 배포를 직접 구성함</li>
     </ul>
